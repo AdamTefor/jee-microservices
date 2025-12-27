@@ -41,31 +41,27 @@ Copier le code
 ## Démarrage (ordre obligatoire)
 
 1) **Config Server**
-```bash
+
 cd config-server
 mvn spring-boot:run
 Eureka Server
 
-bash
-Copier le code
+
 cd ../eureka-server
 mvn spring-boot:run
 Microservice Produits
 
-bash
-Copier le code
+
 cd ../microservice-produits
 mvn spring-boot:run
 Microservice Commandes
 
-bash
-Copier le code
+
 cd ../microservice-commandes
 mvn spring-boot:run
 API Gateway
 
-bash
-Copier le code
+
 cd ../api-gateway
 mvn spring-boot:run
 Vérifications rapides
@@ -88,8 +84,7 @@ Tests Postman (exemples)
 Produits (direct)
 POST http://localhost:8083/api/produits
 
-json
-Copier le code
+
 {
   "nom": "Clavier",
   "prix": 300,
@@ -100,8 +95,7 @@ GET http://localhost:8083/api/produits
 Commandes (direct)
 POST http://localhost:8082/api/commandes
 
-json
-Copier le code
+
 {
   "description": "Commande clavier",
   "quantite": 2,
@@ -109,6 +103,7 @@ Copier le code
   "montant": 600,
   "idProduit": 1
 }
+
 GET http://localhost:8082/api/commandes
 
 GET http://localhost:8082/api/commandes/1/details
