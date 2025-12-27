@@ -1,0 +1,66 @@
+{
+  "version": "1.0",
+  "records": [
+    {
+      "filePath": "C:/Users/USER/Desktop/microservice-commandes/src/main/java/ma/emsi/microservicecommandes/client/ProduitFeignClientFallback.java",
+      "timestamp": 1766849089521,
+      "startOffset": 0,
+      "endOffset": 91,
+      "codeContent": "package ma.emsi.microservicecommandes.client;\n\npublic class ProduitFeignClientFallback {\n}\n",
+      "aiProbability": 90,
+      "aiTool": "AI Assistant",
+      "detectionMethod": "REALTIME_SPEED_ANALYSIS",
+      "lineCount": 5
+    },
+    {
+      "filePath": "C:/Users/USER/Desktop/microservice-commandes/src/main/java/ma/emsi/microservicecommandes/client/ProduitFeignClientFallback.java",
+      "timestamp": 1766849097166,
+      "startOffset": 47,
+      "endOffset": 454,
+      "codeContent": "import ma.emsi.microservicecommandes.client.dto.ProduitDTO;\nimport org.springframework.stereotype.Component;\n\n@Component\npublic class ProduitFeignClientFallback implements ProduitFeignClient {\n\n    @Override\n    public ProduitDTO getProduitById(Long id) {\n        ProduitDTO p \u003d new ProduitDTO();\n        p.setId(id);\n        p.setNom(\"Produit indisponible\");\n        p.setPrix(0.0);\n        return p;\n    }",
+      "aiProbability": 70,
+      "aiTool": "AI Assistant",
+      "detectionMethod": "REALTIME_SPEED_ANALYSIS",
+      "lineCount": 14
+    },
+    {
+      "filePath": "C:/Users/USER/Desktop/microservice-commandes/src/main/java/ma/emsi/microservicecommandes/client/ProduitFeignClient.java",
+      "timestamp": 1766849119527,
+      "startOffset": 210,
+      "endOffset": 504,
+      "codeContent": "GetMapping;\nimport org.springframework.web.bind.annotation.PathVariable;\n\n@FeignClient(\n    name \u003d \"MICROSERVICE-PRODUITS\",\n    fallback \u003d ProduitFeignClientFallback.class\n)\npublic interface ProduitFeignClient {\n\n    @GetMapping(\"/api/produits/{id}\")\n    ProduitDTO getProduitById(@PathVariable",
+      "aiProbability": 95,
+      "aiTool": "AI Assistant",
+      "detectionMethod": "REALTIME_SPEED_ANALYSIS",
+      "lineCount": 11
+    },
+    {
+      "filePath": "C:/Users/USER/Desktop/microservice-commandes/src/main/java/ma/emsi/microservicecommandes/controller/CommandeController.java",
+      "timestamp": 1766872740721,
+      "startOffset": 1301,
+      "endOffset": 1434,
+      "codeContent": "@GetMapping(\"/{id}/details\")\npublic CommandeDetailsDTO details(@PathVariable Long id) {\n    return service.getCommandeDetails(id);\n}\n",
+      "aiProbability": 95,
+      "aiTool": "AI Assistant",
+      "detectionMethod": "REALTIME_SPEED_ANALYSIS",
+      "lineCount": 5
+    },
+    {
+      "filePath": "C:/Users/USER/Desktop/microservice-commandes/src/main/java/ma/emsi/microservicecommandes/service/CommandeService.java",
+      "timestamp": 1766873358178,
+      "startOffset": 402,
+      "endOffset": 2772,
+      "codeContent": "import org.springframework.transaction.annotation.Transactional;\n\nimport java.util.List;\n\n@Service\n@Transactional\npublic class CommandeService {\n\n    private final CommandeRepository repository;\n    private final ProduitFeignClient produitClient;\n\n    public CommandeService(CommandeRepository repository, ProduitFeignClient produitClient) {\n        this.repository \u003d repository;\n        this.produitClient \u003d produitClient;\n    }\n\n    // CRUD\n    public Commande create(Commande c) {\n        return repository.save(c);\n    }\n\n    @Transactional(readOnly \u003d true)\n    public List\u003cCommande\u003e findAll() {\n        return repository.findAll();\n    }\n\n    @Transactional(readOnly \u003d true)\n    public Commande findById(Long id) {\n        return repository.findById(id)\n                .orElseThrow(() -\u003e new RuntimeException(\"Commande introuvable : \" + id));\n    }\n\n    public Commande update(Long id, Commande c) {\n        Commande existing \u003d findById(id);\n        existing.setDescription(c.getDescription());\n        existing.setQuantite(c.getQuantite());\n        existing.setDate(c.getDate());\n        existing.setMontant(c.getMontant());\n        existing.setIdProduit(c.getIdProduit());\n        return repository.save(existing);\n    }\n\n    public void delete(Long id) {\n        repository.deleteById(id);\n    }\n\n    // Détails commande + produit (Feign + fallback)\n    @Transactional(readOnly \u003d true)\n    public CommandeDetailsDTO getDetails(Long id) {\n        Commande c \u003d findById(id);\n\n        CommandeDetailsDTO dto \u003d new CommandeDetailsDTO();\n        dto.setId(c.getId());\n        dto.setDescription(c.getDescription());\n        dto.setQuantite(c.getQuantite());\n        dto.setDate(c.getDate());\n        dto.setMontant(c.getMontant());\n        dto.setIdProduit(c.getIdProduit());\n\n        // Si idProduit existe \u003d\u003e appel Feign\n        if (c.getIdProduit() !\u003d null) {\n            try {\n                ProduitDTO p \u003d produitClient.getProduitById(c.getIdProduit());\n                dto.setProduit(p);\n            } catch (Exception ex) {\n                // Sécurité: même si fallback ne marche pas, on évite le 500\n                ProduitDTO fallback \u003d new ProduitDTO();\n                fallback.setId(c.getIdProduit());\n                fallback.setNom(\"Produit indisponible\");\n                fallback.setPrix(0.0);\n                dto.setProduit(fallback);\n            }",
+      "aiProbability": 95,
+      "aiTool": "AI Assistant",
+      "detectionMethod": "REALTIME_SPEED_ANALYSIS",
+      "lineCount": 72
+    }
+  ],
+  "toolStats": {
+    "AI Assistant": {
+      "usageCount": 5,
+      "totalLines": 107
+    }
+  }
+}
